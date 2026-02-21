@@ -33,6 +33,14 @@ function startDraw(event) {
     ctx.beginPath();
     ctx.moveTo(event.offsetX, event.offsetY);
 }
+function startDrawWF(event) {
+    event.preventDefault()
+    if (!isd) {
+        isd = true;
+    }
+    ctx.beginPath();
+    ctx.moveTo(event.touches[0].pageX, event.touches[0].pageY);
+}
 // function startErase(event) {
 //     if (!isd) {
 //         isd = true;
@@ -48,16 +56,23 @@ function startDraw(event) {
 //         startErase;
 //     }
 // })
-canvas.addEventListener("mousedown", startDraw)
+canvas.addEventListener("pointerdown", startDraw)
 function endDraw(event) {
     if (isd) {
         isd = false;
     }
 }
-canvas.addEventListener("mouseup", endDraw)
+canvas.addEventListener("pointerup", endDraw)
 function draw(event) {
     if (isd ){
         ctx.lineTo(event.offsetX, event.offsetY)
+        ctx.strokeStyle = color;
+        ctx.stroke()
+    }
+}
+function drawWF(event) {
+    if (isd ){
+        ctx.lineTo(event.touches[0].pageX, event.touches[0].pageY)
         ctx.strokeStyle = color;
         ctx.stroke()
     }
@@ -77,7 +92,7 @@ function draw(event) {
 //         erase;
 //     }
 // })
-canvas.addEventListener("mousemove", draw)
+canvas.addEventListener("pointermove", draw)
 let trash = document.querySelector("#trashbin");
 trash.addEventListener("click", function(){
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -99,11 +114,12 @@ function cw(){
 weight.addEventListener("change", cw)
 // Телефон
 let media = window.matchMedia("(min-width: 300px) and (max-width: 500px)")
+
 if (media.matches){
     canvas.width = window.innerWidth*0.8;
     canvas.height = window.innerHeight*0.4;
-    canvas.addEventListener("touchstart", startDraw)
-    canvas.addEventListener("touchend", endDraw)
-    canvas.addEventListener("touchmove", draw)
-    
+    var el = document.getElementById("canvas");
+    // el.addEventListener("touchstart", startDrawWF)
+    // el.addEventListener("touchend", endDraw)
+    // el.addEventListener("touchmove", drawWF)
 }
