@@ -68,6 +68,33 @@ main{
     background-color: transparent;
 }
 
+#line{
+    background-image: url(images/line.png);
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+}
+
+#square{
+    background-image: url(images/square.png);
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+}
+
+#circle{
+    background-image: url(images/circle.png);
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+}
+
 #weight{
    margin: 10px;
    width: 64px;
@@ -126,6 +153,7 @@ main{
     header{
         width: calc(100vw - 40px);
         padding: 20px;
+        gap: 30%;
     }
     main{
         flex-direction: column-reverse;
@@ -133,6 +161,7 @@ main{
     .panel{
         flex-direction: row;
         gap: 20px;
+        margin-top: 20px;
     }
     #color{
         margin-top: 0px;

@@ -28,6 +28,13 @@ document.getElementById("eraser").addEventListener("click", function () {
     ctx.strokeStyle = color;
     ctx.lineWidth = size;
 });
+let line = document.querySelector("#line");
+document.getElementById("line").addEventListener("click", function () {
+    tool = "line";
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size
+});
 function gc(event){
     const rect = canvas.getBoundingClientRect();
     if (event.touches && event.touches.length > 0) {
@@ -68,7 +75,15 @@ function startDraw(event) {
 canvas.addEventListener("pointerdown", startDraw)
 function endDraw(event) {
     if (isd) {
-        isd = false;
+        if (tool=="line") {
+            ctx.lineTo(lastcX, lastcY)
+            ctx.strokeStyle = color;
+            ctx.stroke()
+            isd = false;
+        }
+        else{
+            isd = false;
+        }
     }
 }
 function endDrawWF(event) {
@@ -81,12 +96,17 @@ function endDrawWF(event) {
 }
 canvas.addEventListener("pointerup", endDraw)
 function draw(event) {
-    if (isd ){
+    if ((isd) && ((tool=="pen")) || (tool=="eraser")){
         const rect = canvas.getBoundingClientRect();
         ctx.lineTo(gc(event).x, gc(event).y)
         ctx.strokeStyle = color;
         ctx.stroke()
     }
+    else{
+        lastcX = gc(event).x;
+        lastcY = gc(event).y;
+    }
+
 }
 function drawWF(event) {
     if (isd ){
