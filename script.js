@@ -5,8 +5,10 @@ let ctx = canvas.getContext("2d");
 let isd = false;
 let color = "#000000"
 let tool;
-let size;
-let clr = document.querySelector("#color input")
+let size = "5px";
+let lastcX;
+let lastcY;
+let clr = document.querySelector("#color input");
 function chco(){
     color = this.value;
     ctx.strokestyle = color;
@@ -26,20 +28,27 @@ document.getElementById("eraser").addEventListener("click", function () {
     ctx.strokeStyle = color;
     ctx.lineWidth = size;
 });
-function startDraw(event) {
-    if (!isd) {
-        isd = true;
-    }
-    ctx.beginPath();
-    ctx.moveTo(event.offsetX, event.offsetY);
+function gc(event){
+    const rect = canvas.getBoundingClientRect();
+    if (event.touches && event.touches.length > 0) {
+        return {
+          x: event.touches[0].clientX - rect.left,
+          y: event.touches[0].clientY - rect.top
+        };
+      } else {
+        return {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top
+        }
+      }
 }
-function startDrawWF(event) {
-    event.preventDefault()
+function startDraw(event) {
+    const rect = canvas.getBoundingClientRect();
     if (!isd) {
         isd = true;
     }
     ctx.beginPath();
-    ctx.moveTo(event.touches[0].pageX, event.touches[0].pageY);
+    ctx.moveTo(gc(event).x, gc(event).y);
 }
 // function startErase(event) {
 //     if (!isd) {
@@ -62,20 +71,33 @@ function endDraw(event) {
         isd = false;
     }
 }
+function endDrawWF(event) {
+    if (isd) {
+        isd = false;
+        ctx.lineTo(lastcX, lastcY)
+        ctx.strokeStyle = color;
+        ctx.stroke()
+    }
+}
 canvas.addEventListener("pointerup", endDraw)
 function draw(event) {
     if (isd ){
-        ctx.lineTo(event.offsetX, event.offsetY)
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(gc(event).x, gc(event).y)
         ctx.strokeStyle = color;
         ctx.stroke()
     }
 }
 function drawWF(event) {
     if (isd ){
-        ctx.lineTo(event.touches[0].pageX, event.touches[0].pageY)
-        ctx.strokeStyle = color;
-        ctx.stroke()
+        const rect = canvas.getBoundingClientRect();
+        lastcX = gc(event).x;
+        lastcY = gc(event).y;
+        // ctx.lineTo(gc(event).x, gc(event).y)
+        // ctx.strokeStyle = color;
+        // ctx.stroke()
     }
+    
 }
 // function erase(event) {
 //     if (isd ){
@@ -119,7 +141,8 @@ if (media.matches){
     canvas.width = window.innerWidth*0.8;
     canvas.height = window.innerHeight*0.4;
     var el = document.getElementById("canvas");
-    // el.addEventListener("touchstart", startDrawWF)
-    // el.addEventListener("touchend", endDraw)
-    // el.addEventListener("touchmove", drawWF)
+    el.addEventListener("pointerdown", startDraw);
+    el.addEventListener("pointerup", endDraw);
+    el.addEventListener("pointercancel", endDraw);
+    el.addEventListener("pointermove", draw);
 }
