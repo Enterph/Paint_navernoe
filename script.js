@@ -5,9 +5,11 @@ let ctx = canvas.getContext("2d");
 let isd = false;
 let color = "#000000"
 let tool;
-let size = "5px";
+let size = "20px";
 let lastcX;
 let lastcY;
+let fstX;
+let fstY;
 let clr = document.querySelector("#color input");
 function chco(){
     color = this.value;
@@ -35,6 +37,20 @@ document.getElementById("line").addEventListener("click", function () {
     ctx.strokeStyle = color;
     ctx.lineWidth = size
 });
+let square = document.querySelector("#square");
+document.getElementById("square").addEventListener("click", function () {
+    tool = "square";
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size
+});
+let circle = document.querySelector("#circle");
+document.getElementById("circle").addEventListener("click", function () {
+    tool = "circle";
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size
+});
 function gc(event){
     const rect = canvas.getBoundingClientRect();
     if (event.touches && event.touches.length > 0) {
@@ -55,6 +71,8 @@ function startDraw(event) {
         isd = true;
     }
     ctx.beginPath();
+    fstX = gc(event).x;
+    fstY = gc(event).y;
     ctx.moveTo(gc(event).x, gc(event).y);
 }
 // function startErase(event) {
@@ -79,6 +97,20 @@ function endDraw(event) {
             ctx.lineTo(lastcX, lastcY)
             ctx.strokeStyle = color;
             ctx.stroke()
+            isd = false;
+        }
+        else if (tool=="square") {
+            ctx.strokeRect(fstX, fstY, lastcX-fstX, lastcY-fstY)
+            ctx.strokeStyle = color;
+            ctx.stroke()
+            isd = false;
+        }
+        else if (tool=="circle") {
+            r = ((lastcX-fstX)**2 + (lastcY-fstY)**2) **0.5;
+            ctx.beginPath();
+            ctx.arc(fstX, fstY, r, 0, Math.PI * 2);
+            ctx.strokeStyle = color;
+            ctx.stroke();
             isd = false;
         }
         else{
