@@ -1,6 +1,7 @@
 let canvas = document.querySelector('#canvas')
 canvas.width = window.innerWidth*0.8;
 canvas.height = window.innerHeight*0.6;
+canvas.style.touchAction = "none";
 let ctx = canvas.getContext("2d");
 let isd = false;
 let color = "#000000"
@@ -13,7 +14,7 @@ let fstY;
 let clr = document.querySelector("#color input");
 function chco(){
     color = this.value;
-    ctx.strokestyle = color;
+    ctx.strokeStyle = color;
 }
 clr.addEventListener("change", chco)
 let pen = document.querySelector("#pen");
@@ -128,7 +129,7 @@ function endDrawWF(event) {
 }
 canvas.addEventListener("pointerup", endDraw)
 function draw(event) {
-    if ((isd) && ((tool=="pen")) || (tool=="eraser")){
+    if (isd && (tool=="pen") || (tool=="eraser")){
         const rect = canvas.getBoundingClientRect();
         ctx.lineTo(gc(event).x, gc(event).y)
         ctx.strokeStyle = color;
