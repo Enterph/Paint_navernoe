@@ -97,6 +97,15 @@ main{
     background-color: transparent;
 }
 
+#cancel{
+    background-image: url(images/cancel.png);
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    border: none;
+    background-color: transparent;
+}
+
 #weight{
    margin: 10px;
    width: 64px;
@@ -165,7 +174,7 @@ main{
         gap: 10px;
         margin-top: 20px;
     }
-    #pen, #eraser, #line, #square, #circle{
+    #pen, #eraser, #line, #square, #circle, #cancel{
         width: 42px;
         height: 42px;
     }

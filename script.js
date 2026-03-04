@@ -11,6 +11,8 @@ let lastcX;
 let lastcY;
 let fstX;
 let fstY;
+let step = -1;
+let history = [];
 let clr = document.querySelector("#color input");
 function chco(){
     color = this.value;
@@ -52,6 +54,17 @@ document.getElementById("circle").addEventListener("click", function () {
     ctx.strokeStyle = color;
     ctx.lineWidth = size
 });
+document.getElementById("cancel").addEventListener("click", function () {
+    if (step > 0) {
+        step--;
+        let img = new Image();
+        img.src = history[step];
+        img.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+    }
+});
 function gc(event){
     const rect = canvas.getBoundingClientRect();
     if (event.touches && event.touches.length > 0) {
@@ -91,6 +104,11 @@ function startDraw(event) {
 //         startErase;
 //     }
 // })
+function saveState() {
+    step++;
+    history = history.slice(0, step);
+    history.push(canvas.toDataURL());
+}
 canvas.addEventListener("pointerdown", startDraw)
 function endDraw(event) {
     if (isd) {
@@ -118,6 +136,7 @@ function endDraw(event) {
             isd = false;
         }
     }
+    saveState()
 }
 function endDrawWF(event) {
     if (isd) {
