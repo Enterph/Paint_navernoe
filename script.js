@@ -56,6 +56,7 @@ document.getElementById("circle").addEventListener("click", function () {
 });
 document.getElementById("cancel").addEventListener("click", function () {
     if (step > 0) {
+        ctx.globalCompositeOperation = "source-over";
         step--;
         let img = new Image();
         img.src = history[step];
@@ -65,7 +66,7 @@ document.getElementById("cancel").addEventListener("click", function () {
         };
     }
 });
-function gc(event){
+function gc(event) {
     const rect = canvas.getBoundingClientRect();
     if (event.touches && event.touches.length > 0) {
         return {
@@ -89,21 +90,6 @@ function startDraw(event) {
     fstY = gc(event).y;
     ctx.moveTo(gc(event).x, gc(event).y);
 }
-// function startErase(event) {
-//     if (!isd) {
-//         isd = true;
-//     }
-//     ctx.beginPath();
-//     ctx.moveTo(event.offsetX, event.offsetY);
-// }
-// canvas.addEventListener("mousedown", function(){
-//     if (tool == "pen") {
-//         startDraw;
-//     }
-//     else if (tool == "eraser") {
-//         startErase;
-//     }
-// })
 function saveState() {
     step++;
     history = history.slice(0, step);
@@ -138,14 +124,6 @@ function endDraw(event) {
     }
     saveState()
 }
-function endDrawWF(event) {
-    if (isd) {
-        isd = false;
-        ctx.lineTo(lastcX, lastcY)
-        ctx.strokeStyle = color;
-        ctx.stroke()
-    }
-}
 canvas.addEventListener("pointerup", endDraw)
 function draw(event) {
     if (isd && (tool=="pen") || (tool=="eraser")){
@@ -160,32 +138,6 @@ function draw(event) {
     }
 
 }
-function drawWF(event) {
-    if (isd ){
-        const rect = canvas.getBoundingClientRect();
-        lastcX = gc(event).x;
-        lastcY = gc(event).y;
-        // ctx.lineTo(gc(event).x, gc(event).y)
-        // ctx.strokeStyle = color;
-        // ctx.stroke()
-    }
-    
-}
-// function erase(event) {
-//     if (isd ){
-//         ctx.lineTo(event.offsetX, event.offsetY)
-//         ctx.stroke()
-//     }
-// }
-// canvas.addEventListener("mousemove", function(){
-//     if (tool == "pen") {
-//         console.log(isd)
-//         draw;
-//     }
-//     else if (tool == "eraser") {
-//         erase;
-//     }
-// })
 canvas.addEventListener("pointermove", draw)
 let trash = document.querySelector("#trashbin");
 trash.addEventListener("click", function(){
